@@ -1,10 +1,17 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
+from pydantic import BaseModel
+import json
 
-from app.schemas import RequestSchema, ResponseSchema
-from app.agent import run_actionradar
-from app.utils import safe_parse
+from google.adk.runners import Runner
+from app.agent import root_agent
 
 app = FastAPI(title="ActionRadar API")
+
+runner = Runner(root_agent)
+
+
+class Request(BaseModel):
+    meeting_text: str
 
 
 @app.get("/")
@@ -12,14 +19,14 @@ def health():
     return {"status": "running"}
 
 
-@app.post("/analyze", response_model=ResponseSchema)
-def analyze(request: RequestSchema):
+@app.post("/analyze")
+def analyze(req: Request):
+    response = runner.run(input=req.meeting_text)
+
     try:
-        raw_output = run_actionradar(request.meeting_text)
-
-        parsed = safe_parse(raw_output)
-
-        return parsed
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        return json.loads(response.output)
+    except:
+        return {
+            "error": "Invalid JSON from model",
+            "raw_output": response.output
+        }
