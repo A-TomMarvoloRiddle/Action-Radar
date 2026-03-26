@@ -3,4 +3,4 @@ uvicorn
 pydantic
 python-dotenv
 google-adk
-google-generativeai
+google-genai
