@@ -1,0 +1,13 @@
+{
+  "app_name": "actionradar",
+  "user_id": "test1",
+  "session_id": "string",
+  "new_message": {
+    "role": "user",
+    "parts": [
+      {
+        "text": "Alright, let's get started. So first thing — the UI for the dashboard is still pending. Rahul, I think you were supposed to finalize that?\n\nYeah, I’ve done most of it, just need to finish the analytics section. I can get that done by Friday.\n\nOkay good. But that depends on the backend APIs, right?\n\nYeah exactly — I’m still waiting on the API endpoints from the backend team.\n\nRight, so Ankit, can you give us an update on that?\n\nYeah, we’re a bit delayed. The authentication service had some bugs, so we had to fix those first. The APIs should be ready by Thursday evening.\n\nAlright, let’s lock that in — backend APIs ready by Thursday EOD.\n\nAlso, someone needs to handle testing once everything is integrated.\n\nI think Priya can take that?\n\nYeah, I can do testing. I’ll need at least 2 days after the UI and backend are ready.\n\nSo that puts testing completion around next Monday.\n\nMakes sense.\n\nWe also need to prepare the demo for the client presentation.\n\nWho’s taking that?\n\nI can prepare the demo slides — give me till Sunday.\n\nOkay, but we’ll need content from everyone.\n\nYes, Rahul and Ankit, please send your updates by Saturday afternoon.\n\nNoted.\n\nAlso, we haven’t finalized the deployment pipeline yet.\n\nYeah, that’s still pending. We need to decide between Docker and direct Cloud Run deploy.\n\nLet’s not overcomplicate — go with Cloud Run for now.\n\nWho’s handling deployment?\n\nI can take that.\n\nOkay, great. Try to have a basic deployment ready by Monday.\n\nThere’s one more issue — we don’t have proper test data.\n\nYeah, that’s been blocking testing for a while.\n\nCan someone generate mock data?\n\nI think we can script that.\n\nAlright, assign that to Ankit as well?\n\nYeah, I’ll handle mock data generation.\n\nCool. Try to get that done before Friday so Priya can start testing early if possible.\n\nGot it.\n\nAnything else?\n\nYeah, just one thing — documentation.\n\nWe need at least basic docs before demo.\n\nI’ll take care of that.\n\nBy when?\n\nLet’s say Sunday.\n\nAlright.\n\nLet’s stick to this timeline.\n\nDone."
+      }
+    ]
+  }
+}

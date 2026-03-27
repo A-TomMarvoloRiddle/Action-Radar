@@ -16,13 +16,47 @@ AI Agent that converts meeting transcripts into structured execution plans.
 - Docker
 - Google Cloud Run
 
-## 📡 API
+## API Endpoint
 
-### POST /analyze
+curl -X POST "https://actionradar-xxxxx.run.app/sessions" \
+-H "Content-Type: application/json" \
+-d '{
+  "app_name": "actionradar",
+  "user_id": "test_user",
+  "session_id": "s1"
+}'
+
+curl -X POST "https://actionradar-xxxxx.run.app/run" \
+-H "Content-Type: application/json" \
+-d '{
+  "app_name": "actionradar",
+  "user_id": "test_user",
+  "session_id": "s1",
+  "new_message": {
+    "role": "user",
+    "parts": [
+      {
+        "text": "Rahul will complete UI by Friday. Waiting for backend API."
+      }
+    ]
+  }
+}'
+
+This agent is deployed using Google ADK.
 
 #### Input
 {
-  "meeting_text": "Rahul will finish UI by Friday. Waiting for backend API."
+  "app_name": "actionradar",
+  "user_id": "demo_user",
+  "session_id": "session_1",
+  "new_message": {
+    "role": "user",
+    "parts": [
+      {
+        "text": "Your meeting transcript here"
+      }
+    ]
+  }
 }
 
 #### Output
@@ -39,10 +73,6 @@ AI Agent that converts meeting transcripts into structured execution plans.
   "summary": "UI completion depends on backend API.",
   "confidence": 0.87
 }
-
-## 🚀 Deployment
-
-Deployed on Google Cloud Run.
 
 ## 📌 Note
 This project strictly follows:
