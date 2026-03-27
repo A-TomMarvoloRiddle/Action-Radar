@@ -24,8 +24,7 @@ Return ONLY valid JSON in this format:
     }
   ],
   "blockers": ["..."],
-  "summary": "...",
-  "confidence": 0-1
+  "summary": "..."
 }
 
 Rules:
@@ -33,7 +32,7 @@ Rules:
 - Infer owner if missing ("Unassigned")
 - Convert deadlines to YYYY-MM-DD if possible, else "Not specified"
 - Priority must be between 0 and 1
-- Confidence reflects how certain the extraction is
+- Put every blocker in blockers
 - Summary must be max 5 lines
 - DO NOT output anything except valid JSON
 - Return ONLY raw JSON (no markdown, no ```json)
