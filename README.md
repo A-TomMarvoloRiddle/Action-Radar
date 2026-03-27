@@ -1,82 +1,161 @@
-# ActionRadar 🚀
+# ActionRadar
 
-AI Agent that converts meeting transcripts into structured execution plans.
+ActionRadar is a single ADK-powered AI agent that transforms meeting transcripts into a structured execution plan.
 
-## 🔥 Features
-- Extracts action items
-- Assigns owners
-- Detects blockers
-- Generates priority scores
-- Confidence scoring
+It extracts:
+- action items
+- owners
+- deadlines
+- blockers
+- a short summary
+- a confidence score
 
-## 🧠 Tech Stack
-- Google ADK (Agent Development Kit)
+The project is deployed on Google Cloud Run and exposed through the ADK HTTP interface.
+
+## Why ActionRadar stands out
+
+Instead of just summarizing a meeting, ActionRadar turns discussion into an execution-ready output. It highlights:
+- who is responsible
+- what needs to be done
+- when it should be completed
+- what is blocking progress
+
+This makes it more useful than a basic summarizer or classifier while still staying within the single-agent scope of the hackathon.
+
+## Tech Stack
+
+- Google ADK
 - Gemini 2.5 Flash
-- FastAPI
-- Docker
 - Google Cloud Run
+- Python
 
-## API Endpoint
+## Project Structure
 
-curl -X POST "https://actionradar-xxxxx.run.app/sessions" \
--H "Content-Type: application/json" \
--d '{
-  "app_name": "actionradar",
-  "user_id": "test_user",
-  "session_id": "s1"
-}'
+```text
+actionradar/
+├── agent.py
+├── __init__.py
+├── requirements.txt
+├── README.md
+└── .env
+```
 
-curl -X POST "https://actionradar-xxxxx.run.app/run" \
--H "Content-Type: application/json" \
--d '{
-  "app_name": "actionradar",
-  "user_id": "test_user",
-  "session_id": "s1",
-  "new_message": {
-    "role": "user",
-    "parts": [
-      {
-        "text": "Rahul will complete UI by Friday. Waiting for backend API."
-      }
-    ]
-  }
-}'
+## Agent Behavior
 
-This agent is deployed using Google ADK.
+The agent accepts a meeting transcript as input and returns only valid JSON in this format:
 
-#### Input
-{
-  "app_name": "actionradar",
-  "user_id": "demo_user",
-  "session_id": "session_1",
-  "new_message": {
-    "role": "user",
-    "parts": [
-      {
-        "text": "Your meeting transcript here"
-      }
-    ]
-  }
-}
-
-#### Output
+```json
 {
   "action_items": [
     {
-      "task": "Finish UI",
-      "owner": "Rahul",
-      "deadline": "2026-03-28",
-      "priority": 0.9
+      "task": "...",
+      "owner": "...",
+      "deadline": "...",
+      "priority": 0-1
     }
   ],
-  "blockers": ["Waiting for backend API"],
-  "summary": "UI completion depends on backend API.",
-  "confidence": 0.87
+  "blockers": ["..."],
+  "summary": "..."
 }
+```
 
-## 📌 Note
-This project strictly follows:
-- Single AI agent
-- ADK implementation
-- Gemini inference
-- HTTP endpoint exposure
+### Output Rules
+
+- `action_items` should contain every clear task discussed in the transcript.
+- `owner` should be inferred when possible; use `Unassigned` if unclear.
+- `deadline` should be written clearly YYYY-MM-DD; use `Not specified` if none is mentioned.
+- `priority` should be a number between `0` and `1`.
+- `blockers` should contain all blockers mentioned in the transcript.
+- `summary` should be short and limited to a maximum of 5 lines.
+- DO NOT output anything except valid JSON
+- Return ONLY raw JSON (no markdown, no ```json)
+- Do not wrap output in code blocks
+- If unsure, return empty lists instead of invalid fields
+
+## Local Setup
+
+### 1. Create and activate a virtual environment
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+```
+
+### 2. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Set environment variables
+
+Create a `.env` file with the required Google Cloud / Vertex AI settings used by ADK:
+
+```env
+GOOGLE_GENAI_USE_VERTEXAI=TRUE
+GOOGLE_CLOUD_PROJECT=your-project-id
+GOOGLE_CLOUD_LOCATION=asia-south1
+```
+
+### 4. Run locally with ADK
+
+From inside the project folder:
+
+```bash
+adk web .
+```
+
+## Deploy to Cloud Run
+
+Deploy the agent directly with ADK:
+
+```bash
+adk deploy cloud_run \
+  --project=$GOOGLE_CLOUD_PROJECT \
+  --region=$GOOGLE_CLOUD_LOCATION \
+  --service_name actionradar \
+  --with_ui \
+  .
+```
+
+## Usage
+
+After deployment, open the Cloud Run URL in a browser.
+
+You can paste a meeting transcript directly into the UI and receive the final structured JSON response.
+
+### Example Input
+
+```text
+Alright, let's get started. So first thing — the UI for the dashboard is still pending. Rahul, I think you were supposed to finalize that?
+
+Yeah, I’ve done most of it, just need to finish the analytics section. I can get that done by Friday.
+```
+
+### Example Output
+
+```json
+{
+  "action_items": [
+    {
+      "task": "Finish the analytics section of the dashboard UI",
+      "owner": "Rahul",
+      "deadline": "Friday",
+      "priority": 0.86
+    }
+  ],
+  "blockers": [
+    "Waiting on backend APIs"
+  ],
+  "summary": "The team aligned on the remaining UI work, backend dependency, testing, deployment, and documentation tasks. The main blocker is the delayed backend API availability.",
+}
+```
+
+## Notes for Reviewers
+
+- This project intentionally focuses on a single, clearly defined task.
+- It uses ADK for the agent structure.
+- It uses Gemini 2.5 Flash for inference.
+- It is deployed on Cloud Run and can be accessed through the provided service URL.
+- The output is designed to be directly usable as an execution plan.
+
