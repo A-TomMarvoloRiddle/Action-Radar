@@ -1,11 +1,25 @@
 import os
 from google.adk.agents import Agent
 from dotenv import load_dotenv
+from typing import List
+from pydantic import BaseModel
 #from google.genai import types
 
 load_dotenv()
 
 model_name = os.getenv("MODEL")
+
+class ActionItem(BaseModel):
+    task: str
+    owner: str
+    deadline: str
+    priority: float
+
+class ActionRadarOutput(BaseModel):
+    action_items: List[ActionItem]
+    blockers: List[str]
+    summary: str
+
 
 root_agent = Agent(
     name="actionradar",
@@ -39,4 +53,5 @@ Rules:
 - Do not wrap output in code blocks
 - If unsure, return empty lists instead of invalid fields
 """,
+output_schema=ActionRadarOutput,
 )
