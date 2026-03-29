@@ -43,6 +43,7 @@ Return ONLY valid JSON in this format:
 
 Rules:
 - Extract only actionable tasks
+- If speaker labels are present (e.g., Rahul:, Ankit:), use them to assign ownership of tasks.
 - Infer owner if missing ("Unassigned")
 - Convert deadlines to YYYY-MM-DD if possible, else "Not specified"
 - Priority must be between 0 and 1
